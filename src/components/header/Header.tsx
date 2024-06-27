@@ -11,6 +11,7 @@ import AccessibilityOutlinedIcon from '@mui/icons-material/AccessibilityOutlined
 import 'react-date-range/dist/styles.css'; // Import main css file
 import 'react-date-range/dist/theme/default.css'; // Import theme css file
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 
 interface Options {
@@ -24,6 +25,7 @@ interface Props {
 
 
 const Header:React.FC<Props>= ({type}) => {
+    const [destination,setDestination]=useState<String>("")
     const [openDate,setOpenDate]=useState<boolean>(false)
     const [date, setDate] = useState<Range[]>([
         {
@@ -42,11 +44,14 @@ const Header:React.FC<Props>= ({type}) => {
         children:0,
         room:1,
     });
-console.log(type)
+    const navigate=useNavigate();
     const handleOption=(name:keyof Options,operation:string)=>{
         setOptions((prev)=>{return{
             ...prev,[name]:operation=="i"?prev[name]+1:prev[name]-1
         }})
+    }
+    const handleSearch=()=>{
+        navigate("/hotels",{state:{destination,date,options}})
     }
 
     return (
@@ -87,6 +92,7 @@ console.log(type)
                             type="text"
                             placeholder="Where are you going?"
                             className="headerSearchInput"
+                            onChange={e=>setDestination(e.target.value)}
                         />
                     </div>
                     <div className="headerSearchItem">
@@ -137,7 +143,7 @@ console.log(type)
                     </div>}
                     </div>
                     <div className="headerSearchItem">
-                        <button className="headerBtn">Search</button>
+                        <button className="headerBtn" onClick={handleSearch}>Search</button>
                     </div>
                 </div></>}
             </div>
